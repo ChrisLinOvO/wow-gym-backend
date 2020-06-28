@@ -29,6 +29,7 @@ const getArticleItemById = async (req, res) => {
 const getComments = async (req, res) => {
   try {
     const articleId = req.params.articleId;
+    //123
     // console.log(articleId);
     const [row] = await db.query(
       // `SELECT * FROM  (article INNER JOIN articlecomments ON articlecomments.articleId = article.articleId)INNER JOIN user ON article.memberId = user.memberId WHERE article.articleId=${articleId}`
