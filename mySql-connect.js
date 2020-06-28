@@ -5,7 +5,7 @@ const pool = mysql.createPool({
   host: "localhost",
   user: "root",
   password: "",
-  database: "gym-project",
+  database: "wow-gym",
 });
 
 // const pool = mysql.createPool({
@@ -16,11 +16,11 @@ const pool = mysql.createPool({
 // });
 
 // production config
-const pool = mysql.createPool({
-  host: "eu-cdbr-west-03.cleardb.net",
-  user: "b7aafd89bf2851",
-  password: "633fdffc",
-  database: "heroku_a97c1aaa6daa789",
-});
+// const pool = mysql.createPool({
+//   host: "eu-cdbr-west-03.cleardb.net",
+//   user: "b7aafd89bf2851",
+//   password: "633fdffc",
+//   database: "heroku_a97c1aaa6daa789",
+// });
 
 module.exports = pool.promise();

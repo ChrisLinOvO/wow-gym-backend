@@ -31,7 +31,9 @@ const getComments = async (req, res) => {
     const articleId = req.params.articleId;
     // console.log(articleId);
     const [row] = await db.query(
-      `SELECT * FROM  (article INNER JOIN articlecomments ON articlecomments.articleId = article.articleId)INNER JOIN user ON article.memberId = user.memberId WHERE article.articleId=${articleId}`
+      // `SELECT * FROM  (article INNER JOIN articlecomments ON articlecomments.articleId = article.articleId)INNER JOIN user ON article.memberId = user.memberId WHERE article.articleId=${articleId}`
+      `SELECT C.*,U.memberNickname,U.memberImg FROM articlecomments C left join user U on U.memberId=C.memberId
+      where C.articleId=${articleId} ORDER BY C.created_at DESC`
     );
     if (!row) return next("Can't find article item", 404);
     res.json(row);
@@ -73,7 +75,7 @@ const getArticleItemByArticleId = async (req, res) => {
 
 //取得留言數目
 const getCommentsNumber = async (req, res) => {
-  console.log(req.params.articleId)
+  // console.log(req.params.articleId)
   try {
     const articleId = req.params.articleId;
     // console.log(articleId);
@@ -89,7 +91,7 @@ const getCommentsNumber = async (req, res) => {
 
 //取得熱門文章資料
 const getHotData = async (req, res) => {
-  console.log(req.params.articleId)
+  // console.log(req.params.articleId)
   try {
     const articleId = req.params.articleId;
     // console.log(articleId);
@@ -102,7 +104,6 @@ const getHotData = async (req, res) => {
     return next(new HttpError("Can't find article item", 404));
   }
 };
-
 
 
 
@@ -179,7 +180,7 @@ const postArticleItemByIdUpdate = async (req, res, next) => {
     success: false,
   };
   const articleId = req.params.articleId
-  console.log(req.body);
+  // console.log(req.body);
   const sql = `UPDATE article SET ? WHERE articleId = ?`;
   db.query(sql, [req.body.data, articleId]).then(([r]) => {
     output.results = r;
