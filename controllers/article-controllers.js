@@ -4,9 +4,12 @@ const HttpError = require("../models/http-error");
 
 //取得文章資料
 const getArticleItems = async (req, res) => {
-  const [rows] = await db.query(
-    "SELECT * FROM article  INNER JOIN user ON article.memberId = user.memberId  ORDER BY articleId DESC"
-  );
+  const [rows] = await db.query(`SELECT A.*,user.*,CASE when C.COUNT is not null then C.COUNT else 0 end as COUNT
+  FROM article A INNER JOIN user ON A.memberId = user.memberId 
+   LEFT JOIN (select articleId,count(*) as COUNT from articlecomments group by articleId) C 
+   on A.articleId=C.articleId
+   ORDER BY articleId DESC`
+);
   res.json(rows);
 };
 
@@ -25,7 +28,7 @@ const getArticleItemById = async (req, res) => {
   }
 };
 
-//取得留言資料1
+//取得留言資料
 const getComments = async (req, res) => {
   try {
     const articleId = req.params.articleId;
@@ -81,7 +84,7 @@ const getCommentsNumber = async (req, res) => {
     const articleId = req.params.articleId;
     // console.log(articleId);
     const [row] = await db.query(
-      `SELECT COUNT(1) FROM  (article INNER JOIN articlecomments ON articlecomments.articleId = article.articleId)INNER JOIN user ON article.memberId = user.memberId WHERE article.articleId=?`,[articleId]
+      `SELECT COUNT(articleId) as COUNT FROM articlecomments where articlecomments.articleId=?`,[articleId]
     );
     if (!row) return next("Can't find article item", 404);
     res.json(row);
@@ -90,6 +93,8 @@ const getCommentsNumber = async (req, res) => {
   }
 };
 
+
+
 //取得熱門文章資料
 const getHotData = async (req, res) => {
   // console.log(req.params.articleId)
@@ -97,7 +102,10 @@ const getHotData = async (req, res) => {
     const articleId = req.params.articleId;
     // console.log(articleId);
     const [row] = await db.query(
-      `SELECT * FROM article ORDER BY articleLike DESC limit 6`,[articleId]
+      `SELECT A.*,CASE when C.COUNT is not null then C.COUNT else 0 end as COUNT
+      FROM article A LEFT JOIN (select articleId,count(*) as COUNT from articlecomments group by articleId) C 
+       on A.articleId=C.articleId
+       ORDER BY A.articleLike desc, COUNT desc limit 6`,[articleId]
     );
     if (!row) return next("Can't find article item", 404);
     res.json(row);
@@ -185,7 +193,7 @@ const postArticleItemByIdUpdate = async (req, res, next) => {
   const sql = `UPDATE article SET ? WHERE articleId = ?`;
   db.query(sql, [req.body.data, articleId]).then(([r]) => {
     output.results = r;
-    if (r.affectedRows && r.insertId) {
+    if (r.affectedRows ) {
       output.success = true;
     }
     res.json(output);
@@ -193,6 +201,25 @@ const postArticleItemByIdUpdate = async (req, res, next) => {
   //res.json(req.body);
 };
 
+//更新按讚次數
+const postArticeLikeUpdate = async (req, res) => {
+  const output = {
+    success: false,
+  };
+  
+  console.log(req.body.data);
+  const sql = `UPDATE article SET articleLike=articleLike+1 WHERE articleId = ?`;
+  db.query(sql, [
+    req.body.articleId,
+  ]).then(([r]) => {
+    output.results = r;
+    if (r.affectedRows) { //是否更新一筆
+      output.success = true;
+    }
+    res.json(output);
+  });
+  // res.json(req.body);
+};
 
 
 
@@ -204,8 +231,9 @@ module.exports = {
   getArticleItemByArticleId,
   getCommentsNumber,
   getHotData,
+  getArticleItemByIdDel,
   postArticleAddComments,
   postArticleAdd,
   postArticleItemByIdUpdate,
-  getArticleItemByIdDel,
+  postArticeLikeUpdate,
 };
