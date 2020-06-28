@@ -25,7 +25,7 @@ const getArticleItemById = async (req, res) => {
   }
 };
 
-//取得留言資料
+//取得留言資料1
 const getComments = async (req, res) => {
   try {
     const articleId = req.params.articleId;
