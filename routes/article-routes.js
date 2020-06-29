@@ -1,5 +1,7 @@
 const express = require("express");
 
+
+
 const {
   getArticleItems,
   getArticleItemById,
@@ -12,7 +14,7 @@ const {
   postArticleAddComments,
   postArticleAdd,
   postArticleItemByIdUpdate,
-  postArticeLikeUpdate,
+  postArticleLikeUpdate,
 } = require("../controllers/article-controllers");
 
 
@@ -28,9 +30,9 @@ router.get("/getHotData/:articleId", getHotData);
 
 
 router.post("/postComments/:articleId", postArticleAddComments);
-router.post("/add", postArticleAdd);
+router.post("/add",postArticleAdd);
 router.post("/articlesUpdate/:articleId", postArticleItemByIdUpdate);
-router.post("/postArticeLikeUpdate", postArticeLikeUpdate);
+router.post("/postArticleLikeUpdate", postArticleLikeUpdate);
 
 router.delete("/articlesEdit/:articleId", getArticleItemByIdDel);
 
