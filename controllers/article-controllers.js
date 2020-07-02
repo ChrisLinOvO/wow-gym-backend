@@ -210,10 +210,10 @@ const postArticleLikeUpdate = async (req, res) => {
   const output = {
     success: false,
   };
-  console.log(req.body.data.articleId)
+  console.log(req.body)
   const sql = `UPDATE article SET articleLike=articleLike+1 WHERE articleId = ?`;
   db.query(sql, [
-    req.body.data.articleId,
+    req.body.articleId,
   ]).then(([r]) => {
     output.results = r;
     if (r.affectedRows) { //是否更新一筆
