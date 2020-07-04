@@ -61,11 +61,12 @@ app.use(cors(corsOptions));
 app.use("/api/shop", shopRoutes);
 app.use("/api/courses", coursesRoutes);
 app.use("/api/category", categoryRoutes);
-app.use("/api", employeeRoutes);
 app.use("/api/customerRoutes", customerRoutes);
-app.use("/Orders", OrderRoutes);
 app.use("/api/user", memberRoutes);
 app.use("/api/articles", articleRoutes);
+app.use("/api", employeeRoutes);
+app.use("/Orders", OrderRoutes);
+
 
 // home route
 app.use((req, res, next) => res.send("Hi welcome to wow-gym API server 👻"));

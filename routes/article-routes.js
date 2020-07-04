@@ -23,7 +23,7 @@ const router = express.Router();
 router.get("/", getArticleItems);
 router.get("/:articleId", getArticleItemById);
 router.get("/getComments/:articleId", getComments);
-router.get("/member/:memberId", getArticleItemByMemberId);
+router.get("/member/:id", getArticleItemByMemberId);
 router.get("/articleItem/:articleId", getArticleItemByArticleId);
 router.get("/getCommentsNumber/:articleId", getCommentsNumber);
 router.get("/getHotData/:articleId", getHotData);
